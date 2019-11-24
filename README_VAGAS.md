@@ -1,0 +1,46 @@
+# College-Jobs
+I will post here my college jobs for backups and if anyone wants to see
+ Need a txt filename "vagas.txt" to function properly
+ 
+------------- start file ----------
+Recepcionista
+Medio
+F
+18
+0
+1500,000000
+5
+
+Ajudante geral
+Fundamental
+M
+30
+0
+4500,000000
+2
+
+Gerente de RH
+Superior
+X
+30
+0
+4500,000000
+2
+
+Analista de Sistemas
+Superior
+X
+25
+0
+3500,000000
+1
+
+Porteiro
+Fundamental
+X
+35
+50
+1200,000000
+2
+
+------------- end file ----------
