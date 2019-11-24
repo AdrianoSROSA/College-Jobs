@@ -1,0 +1,433 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+#define QVAGAS 10
+
+//-------------------------------------- funcoes.h
+//estrutura dos cargos
+typedef struct
+{
+	char cargo[30];
+	char escola[30];
+	char sexo;
+	int idadeMin;
+	int idadeMax;
+	float salario;
+	int vaga;		
+}Vagas;
+//inicioalizacao das funcoes
+char menu_1();
+char menu_2();
+int idadeUser();
+char sexoUser();
+float pSalUser();
+char escUser();
+void preencher(int i, int s, int p, int e);
+void mostraVagas(Vagas vetor[], int ct);
+void vagaDisp(Vagas vetor[], int i);
+char aceitaVaga();
+int numVaga();
+int novoCadastro(Vagas vetor[], int ct);
+
+
+//-------------------------------------- funcoes.c
+//estrutura das funcoes
+char menu_1()//mostra o menu 1
+{
+	char start = 'x';
+	do
+	{
+		system("cls");
+		printf("\n----- MENU 1 -----\n");
+		printf("\n0 - Iniciar o programa ");
+		printf("\n1 - Finalizar o programa ");
+		printf("\n\n");
+		scanf(" %c", &start);		
+	}while(start!= '0' && start!= '1');	
+	return start;		
+}
+
+char menu_2()//mostra o menu 2
+{
+	char opc = 'x';
+	do
+	{
+		system("cls");
+		printf("\n----- MENU 2 -----\n");
+		printf("\n0 - Entrar com idade;");
+		printf("\n1 - Entrar com o sexo;");
+		printf("\n2 - Entrar com a pretensão salarial;");
+		printf("\n3 - Entrar com o nível de escolaridade;");
+		printf("\n4 - Buscar vaga;");
+		printf("\n5 - Quantidade de vagas disponíveis;");
+		printf("\n6 - Voltar ao menu anterior.\n\n");
+		scanf(" %c", &opc);
+	}while(opc!= '0' && opc!= '1' && opc!= '2' && opc!= '3' && opc!= '4' && opc!= '5' && opc!= '6');	
+	return opc;
+}
+
+int idadeUser()//preenche a idade do usuario
+{
+	int id = 0;
+	do
+	{						
+		system("cls");	
+		printf("\nIdade: ");
+		scanf(" %d", &id);
+		system("cls");
+	}while(id< 16);
+	return id;
+}
+
+char sexoUser()//preenche o sexo do usuario
+{
+	char se = 'x';
+	char jota;
+	do
+	{
+		system("cls");
+		printf("\nSexo (f/m): ");
+		scanf(" %c", &se);
+		system("cls");
+	}while((se != 'f') && (se != 'm'));		
+	if(se == 'f') jota = 'F';
+	if(se == 'm') jota = 'M';
+	return jota;
+}
+
+float pSalUser()//preenche a pretensoa salarial
+{
+	float pS = 0.0;
+	do
+	{				
+		system("cls");
+		printf("\nPretensão salarial: R$ ");
+		scanf(" %f", &pS);
+		system("cls");
+	}while(pS<0.0);
+	return pS;
+}
+
+char escUser()//preenche a escolaridade
+{
+	char es = 'x';
+	do
+	{				
+		system("cls");
+		printf("\n0 - fundamental completo;");	
+		printf("\n1 - ensino médio completo;");	
+		printf("\n2 - superior completo.\n\n");	
+		scanf(" %c", &es);
+		system("cls");
+	}while(es != '0' && es != '1' && es != '2');				
+	return es;
+}
+
+void preencher(int i, int s, int p, int e)//mostra se faltou preencher algum item
+{
+	if(i == 0)
+	{
+		system("cls");
+		printf("\nFalta preencher a idade\n");
+	}
+	if(s == 0)
+	{
+		system("cls");
+		printf("\nFalta preencher o sexo\n");
+	}
+	if(p == 0)
+	{
+		system("cls");
+		printf("\nFalta preencher a pretensao salarial\n");
+	}
+	if(e == 0)
+	{
+		system("cls");
+		printf("\nFalta preencher a escolaridade\n");
+	}
+	printf("\n");
+	system("pause");
+}
+
+void mostraVagas(Vagas vetor[], int ct)//mostra as vagas abertas para todos
+{
+	int i;
+	system("cls");
+	for(i = 0; i < ct; i++)
+	{
+		if(vetor[i].vaga <= 0) i++;
+		printf("\nCargo: %s", vetor[i].cargo);
+		printf("\nEscolaridade: %s", vetor[i].escola);
+		printf("\nSexo: %c", vetor[i].sexo);
+		printf("\nIdade Minima: %d", vetor[i].idadeMin);
+		printf("\nIdade Maxima: %d", vetor[i].idadeMax);
+		printf("\nSalario: %.2f", vetor[i].salario);
+		printf("\nVagas: %d\n", vetor[i].vaga);
+	}
+	system("pause");				
+}
+
+void vagaDisp(Vagas vetor[], int i)//mostra as vagas disponiveis de acordo com o perfil do usuario
+{
+		printf("\n----- Vaga - %d - disponivel -----\n",i);
+		printf("\nCargo: %s", vetor[i].cargo);
+		printf("\nEscolaridade: %s", vetor[i].escola);
+		printf("\nSexo: %c", vetor[i].sexo);
+		printf("\nIdade Minima: %d", vetor[i].idadeMin);
+		printf("\nIdade Maxima: %d", vetor[i].idadeMax);
+		printf("\nSalario: %.2f", vetor[i].salario);
+		printf("\nVagas: %d\n", vetor[i].vaga);
+}
+
+char aceitaVaga()//pergunta se quer aceitar a vaga
+{
+	char deseja;
+	do
+	{
+		printf("\n\nDeseja concorrer a alguma vaga? (s/n)\n");
+		scanf(" %c", &deseja);
+	}while(deseja != 's' && deseja != 'n');
+	return deseja;	
+}
+
+int numVaga(int posi[])//escolhe o numero da vaga que deseja
+{
+	int aceitou = -1;
+	while(posi[aceitou] != 1)
+	{
+		printf("\nNumero da vaga: ");
+		scanf(" %d", &aceitou);
+	}
+	return aceitou;
+}
+
+int novoCadastro(Vagas vetor[], int ct)//apos escolher a vaga, o programa reescreve o arquivo contendo as vagas restantes
+{
+
+	FILE *arquivo;
+	int i;
+	int posi[QVAGAS];
+	if((arquivo = fopen("vagas.txt", "w")) == NULL)
+	{
+		system("cls");
+		printf("\nArquivo vazio\n");
+		system("pause");
+		return 1;
+	}
+	for(i = 0; i < ct; i++)
+	{
+		if(vetor[i].vaga == 0)
+		{
+			posi[i]=0;	
+			i++;
+		}
+		// Reescrevendo o arquivo com fprintf										
+		fprintf(arquivo, "%s\n", vetor[i].cargo);
+		fprintf(arquivo, "%s\n", vetor[i].escola);
+		fprintf(arquivo, "%c\n", vetor[i].sexo);
+		fprintf(arquivo, "%d\n", vetor[i].idadeMin);
+		fprintf(arquivo, "%d\n", vetor[i].idadeMax);
+		fprintf(arquivo, "%.2f\n", vetor[i].salario);
+		fprintf(arquivo, "%d\n", vetor[i].vaga);
+		fputs("\n", arquivo);				
+	}							
+	fclose(arquivo);
+	system("pause");
+}
+
+
+//-------------------------------------- main.c
+
+int main()
+{
+	setlocale(LC_ALL,"portuguese");
+
+	FILE *arquivo;
+
+//declaracao de variaveis
+	char start = 'x', opc = '6', sexo = 'x', esc = 'x', falta='0', st='x',aceitar = 'x',niv = 'x', deseja;
+	int idade = 0;
+	int posi[QVAGAS];
+	float pSal = 0.0;
+	int a=0, b=0, c=0, d=0;
+	int i=0, j, k, cont=0,p,z=0, aceitou,sV;
+	char aux[25];
+	char aux2[15];
+	int nint;
+	float nfloat;
+	
+	Vagas vetor[QVAGAS];
+	Vagas user;
+	//verifica se o arquive nao é nulo
+	if((arquivo = fopen("vagas.txt", "r")) == NULL) return 1;
+	//copia os dados do arquivo para os vetores do programa
+	while((fgets(aux, sizeof(aux), arquivo) != NULL))
+	{		
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		strncpy(vetor[i].cargo, aux, sizeof(vetor[i].cargo));
+				
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		strncpy(vetor[i].escola, aux, sizeof(vetor[i].escola));
+		
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		vetor[i].sexo = aux[0];
+				
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		vetor[i].idadeMin = atoi(aux);
+				
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		vetor[i].idadeMax = atoi(aux);
+				
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		vetor[i].salario = atof(aux);
+				
+		fgets(aux, sizeof(aux), arquivo);
+		k = 0;
+		while(aux[k] != '\n') k++;
+		aux[k] = '\0';
+		vetor[i].vaga = atoi(aux);
+					
+		printf("\n");
+		fgets(aux, sizeof(aux), arquivo);
+		cont++;
+		i++;
+		
+	}
+	
+	fclose(arquivo);
+	
+	start = menu_1();//chama o menu 1
+
+	while(start != '1')//enquando a escolha for '0', ele permanece no menu 2
+	{		
+		system("cls");
+		st = menu_2();//menu 2 mostra as opcoes para o usuario
+		
+		switch(st)
+		{
+			case '0':
+			{
+				user.idadeMin = idadeUser();// caso 0 - chama a funcao que preenche a idade
+				a = 1;
+				break;
+			}
+			
+			case '1':
+			{
+				user.sexo = sexoUser();//caso 1 - chama a funcao que preenche o sexo
+				b = 1;
+				break;
+			}
+		
+			case '2':
+			{
+				user.salario = pSalUser();//caso 2 - chama a funcao que preenche o salario
+				c = 1;
+				break;
+			}
+			
+			case '3':
+			{
+				niv = escUser();//caso 4 - chama a funcao que preenche a escolaridade
+				//copia a string no vetor do usuario para poder compara com os cargos
+				if(niv == '2') strncpy(user.escola, "Superior", sizeof(user.escola));
+				if(niv == '1') strncpy(user.escola, "Medio", sizeof(user.escola));				
+				if(niv == '0') strncpy(user.escola, "Fundamental", sizeof(user.escola));
+				d = 1;
+				break;
+			}
+		
+			case '4':
+			{				
+				if(a == 0 || b == 0 || c == 0  || d == 0 )//verifica se tem item faltante
+				{
+					preencher(a, b, c, d);//mostra ao usuario o item faltante
+					break;
+				}
+				else
+				{
+					system("cls");
+					for(i = 0; i < cont; i++)//percorre os cargos ate o ultimo comparendo com os dados do usuario
+					{	//verifica se tem a idade minima necessaria
+						if((user.idadeMin>= vetor[i].idadeMin))
+						{	//verifica se nao 'estorou' a idade maxima
+							if((vetor[i].idadeMax == 0) || (user.idadeMax <= vetor[i].idadeMax))
+							{	//verifica se a pretensao salarial do usuario é menor ou igual ao salario do cargo
+							 	if(user.salario <= vetor[i].salario)
+								 {	//verifica se é do mesmo sexo ou indiferente
+								 	if((user.sexo == vetor[i].sexo ) || (vetor[i].sexo == 'X'))
+									 {	//compara o nivel de escolaridade do usuario com a vaga
+										if((niv == '2') || (strncmp(user.escola, vetor[i].escola, sizeof(user.escola)) == 0))
+										{	//verifica se há vagas
+											if(vetor[i].vaga > 0)
+											{	//se todas as informacoes forem verdadeiras, ele mostra a vaga											
+												vagaDisp(vetor,i);
+												posi[i] = 1;//a posicao do vetor referente a vaga recebe '1' para indicar qual vaga é		
+												z = 1;//z serve para mostra que exitem vagas disponiveis
+											}
+										} 	
+									 }
+								 } 
+							}						
+						}
+					}
+					if(z==1)//como existem vagas ele segue na programacao
+					{	
+					//	if(posi[i]= 0)
+					//	{	//pergunta ao usuario se ele quer aceitar a vaga
+							deseja = aceitaVaga();
+							
+							if(deseja == 's')//caso 'sim' ele remove a vaga 
+							{
+								aceitou = numVaga(posi);//chama a funcao que pergunta a vaga escolhida
+								vetor[aceitou].vaga--;
+								printf("\nVaga preenchida com sucesso\n");
+								
+								novoCadastro(vetor, cont);//chama a funcao que reescreve os dados das vagas
+							}
+					//	}			
+					}else
+					{	//caso nao tenha vaga
+						printf("\nNão ha vagas para o seu perfil\n");
+						system("pause");
+					} 	
+				}
+				break;
+			}
+			
+			case '5':
+			{
+				mostraVagas(vetor,cont);//caso 5 - chama a funcao que mostra as vagas abertas 
+				break;
+			}		
+			
+			case '6':
+			{
+				start = menu_1();//caso 6 - chama a funcao que mostra o menu 1 ao usuario
+				break;
+			}	
+		}	
+	}
+
+
+	return 0;
+}
